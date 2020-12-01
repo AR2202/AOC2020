@@ -10,7 +10,7 @@ module Day1
 
     ) where
 
-import Data.List (intersect)
+import Data.List (intersect, nub)
 import Common
 
 
@@ -51,8 +51,13 @@ findDiffInList list = list `intersect` differences
 multiply3Numbers :: [Int] -> Int
 multiply3Numbers list = list !! 0 * list !! 1 * list !! 2
 
+excludeDuplicates :: [Int] -> [Int]
+excludeDuplicates list
+  | length list > 3 = nub list
+  | otherwise       = list
+
 solutionDay1b :: IO ()
 solutionDay1b = do
   numberlist <- readLines "input1.txt"
-  let result = multiply3Numbers $ findDiffInList numberlist
+  let result = multiply3Numbers $ excludeDuplicates $ findDiffInList numberlist
   print result
