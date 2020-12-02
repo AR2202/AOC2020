@@ -10,7 +10,7 @@ where
 
 import Text.Regex.Posix
 import Data.Char
-import Data.Boolean
+import Data.Algebra.Boolean
 import Common
 
 example1d2 = ["1-3 a: abcde", "1-3 b: cdefg","2-9 c: ccccccccc"]
@@ -52,7 +52,7 @@ solutionDay2a = do
     --Part2
     ----------------
 
-isValidPart2 (firstIndex, secondIndex,char, password) = Data.Boolean.not $ ((password !! (firstIndex-1)) == char) `xor` ((password !! (secondIndex-1)) == char)
+isValidPart2 (firstIndex, secondIndex,char, password) =  ((password !! (firstIndex-1)) == char) `xor` ((password !! (secondIndex-1)) == char)
 
 isValidPasswordPart2 :: String -> Bool
 isValidPasswordPart2 = isValidPart2 . passwordConditions
