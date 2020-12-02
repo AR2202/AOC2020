@@ -10,7 +10,7 @@ module Day1
 
     ) where
 
-import Data.List (intersect, nub)
+import Data.List (intersect, nub,sort)
 import Common
 
 
@@ -31,7 +31,7 @@ findDiffTo2020InList list = intersect list $ diffTo2020 list
 
 multiplyNumbers :: [Int] -> Int
 multiplyNumbers numInList = number * (2020 - number)
-    where number = head numInList
+    where number = head $ sort numInList
 
 solutionDay1a :: IO ()
 solutionDay1a = do
