@@ -3,7 +3,14 @@
 # For more information, please see the documentation at:
 #   https://docs.haskellstack.org/en/stable/lock_files
 
-packages: []
+packages:
+- completed:
+    hackage: AC-Boolean-1.1.0@sha256:63f73587fa1220c93498751fc7004252660173d0606b4337db845b9bb2053bbf,1023
+    pantry-tree:
+      size: 215
+      sha256: e2122f0264c2cc9d96e7543ab1c0fcf85223c8891e459f0c5bec5d0e2935fedb
+  original:
+    hackage: AC-Boolean-1.1.0@sha256:63f73587fa1220c93498751fc7004252660173d0606b4337db845b9bb2053bbf,1023
 snapshots:
 - completed:
     size: 532835

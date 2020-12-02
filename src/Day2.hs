@@ -1,19 +1,22 @@
 {-#LANGUAGE FlexibleContexts#-}
 module Day2
 (
-solutionDay2a
+solutionDay2a,
+solutionDay2b
+
 
 )
 where
 
 import Text.Regex.Posix
 import Data.Char
+import Data.Boolean
 import Common
 
 example1d2 = ["1-3 a: abcde", "1-3 b: cdefg","2-9 c: ccccccccc"]
 
 isValid (lowerBound,upperBound, char, password) 
-    | upperBound >= numOccurrances && numOccurrances >= lowerBound = True
+    | upperBound >= numOccurrances Prelude.&& numOccurrances >= lowerBound = True
     | otherwise                                  = False
         where numOccurrances = length. filter (==char)$ password
 
@@ -43,4 +46,22 @@ solutionDay2a :: IO ()
 solutionDay2a = do
     passwords <- loadAndSplitLines "input2.txt"
     let result = numValidPasswords passwords
+    print result
+
+    ----------------
+    --Part2
+    ----------------
+
+isValidPart2 (firstIndex, secondIndex,char, password) = Data.Boolean.not $ ((password !! (firstIndex-1)) == char) `xor` ((password !! (secondIndex-1)) == char)
+
+isValidPasswordPart2 :: String -> Bool
+isValidPasswordPart2 = isValidPart2 . passwordConditions
+
+numValidPasswords2 :: [String] -> Int
+numValidPasswords2 = length . filter isValidPasswordPart2
+
+solutionDay2b :: IO ()
+solutionDay2b = do
+    passwords <- loadAndSplitLines "input2.txt"
+    let result = numValidPasswords2 passwords
     print result
