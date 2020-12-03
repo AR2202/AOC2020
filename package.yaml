@@ -23,6 +23,15 @@ dependencies:
 - base >= 4.7 && < 5
 - regex-posix
 - cond
+- lens-regex-pcre
+- lens
+- text
+- pcre-heavy
+- pcre-light
+- template-haskell
+- bytestring
+- containers
+- raw-strings-qq
 
 library:
   source-dirs: src
