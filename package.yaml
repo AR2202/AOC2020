@@ -32,6 +32,7 @@ dependencies:
 - bytestring
 - containers
 - raw-strings-qq
+- split
 
 library:
   source-dirs: src

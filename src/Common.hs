@@ -2,6 +2,7 @@
 module Common
 (loadInput,
 loadAndSplitLines,
+splitOnBlankLine,
 readLines
 
 )
@@ -9,6 +10,7 @@ where
 
 import Control.Applicative
 import Control.Monad
+import Data.List.Split
 
 dir = "input/"
 filepath filename = dir ++ filename
@@ -22,3 +24,8 @@ loadAndSplitLines filename = do
 
 readLines :: Read a => String -> IO [a]
 readLines filename = map read <$> loadAndSplitLines filename
+
+splitOnBlankLine filename = do
+    contents <- loadInput filename
+    let paragraphs = splitOn "\n\n" contents
+    return paragraphs
