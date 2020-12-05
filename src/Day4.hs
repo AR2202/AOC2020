@@ -32,25 +32,27 @@ solutionDay4a = (splitOnBlankLine "input4.txt")  >>= print . length . filter toT
 
 data PassportField = BYR | IYR | EYR | HGT | HCL | ECL |PID |NONE deriving (Show,Read,Eq)
 
-passportFieldsWithData txt =   txt ^.. [regex|\b(byr|iyr|eyr|hgt|hcl|ecl|pid):#?\w*|] . match
-splitFieldnameFromData txt =  listToTuple $ fromMaybe [] (txt ^?  [regex|(\w+):(#?\w+)|] . groups)
+passportFieldsWithData txt =   txt ^.. [regex|\b(byr|iyr|eyr|hgt|hcl|ecl|pid):#?\w*\b|] . match
+splitFieldnameFromData txt =  listToTuple $ fromMaybe [] (txt ^?  [regex|(\w+):(#?\w+\b)|] . groups)
 
 listToTuple :: [T.Text] -> (PassportField,T.Text)
 listToTuple []=(NONE,"")
 listToTuple (x:[]) = ((readPassportField . T.toUpper )x,"")
 listToTuple (x:y:xs) = ((readPassportField . T.toUpper) x,y)
 
-solutionDay4b_ :: IO()
-solutionDay4b_ = do
+solutionDay4b_ :: Int -> IO()
+solutionDay4b_ x = do
     passportinfo <- splitOnBlankLine  "input4.txt"
-    let first = passportinfo !! 9
+    let first = passportinfo !! x
     
     print first
     
     print $ fieldNames $ filter (uncurry dataIsValid) $ map splitFieldnameFromData $ passportFieldsWithData $ T.pack first
     print $ filter (uncurry dataIsValid) $ map splitFieldnameFromData $ passportFieldsWithData $ T.pack first
     print $ hasAllFieldnames first
+    print $ hasAllValidFields first
     print $ numValidFields first
+    print $ length $ filter hasAllValidFields passportinfo
 
 readPassportField :: T.Text -> PassportField
 readPassportField = read . T.unpack
@@ -71,10 +73,10 @@ iyrValid x = (read . T.unpack ) x `elem` [2010..2020]
 eyrValid x = (read . T.unpack ) x `elem` [2020..2030]
 eclValid x = T.unpack  x `elem` ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"]
 pidValid x = has ([regex|(\d{9}\b)|]) x
-hclValid x = has ([regex|(#(\d|[a-f]){6}\b)|]) x
+hclValid x = has ([regex|(#([0-9]|[a-f]){6}\b)|]) x
 hgtValid x = (read . T.unpack ) (height x) `elem` (validHeights $ hgtTokv x)
 
-hgtTokv x = x & [regex|(\d+)(in|cm)|] . match %@~ \[v, k] _ -> "{" <> k <> ":" <> v <> "}"
+hgtTokv x = x & [regex|(\d+)(in|cm)\b|] . match %@~ \[v, k] _ -> "{" <> k <> ":" <> v <> "}"
 unitIsIn x = has ([regex|(in:)|]) x
 unitIsCm x = has ([regex|(cm:)|]) x
 validHeights x 
