@@ -1,9 +1,7 @@
 module Day5
-(findRow,
-example1d5AsFB,
-findCol,
-example1d5AsLR,
-solutionday5a)
+(
+solutionDay5a,
+solutionDay5b)
 where
 
 import Common
@@ -43,9 +41,25 @@ toFB (row,col) = map chr2FB row
 toLR (row,col) = map chr2LR col
 
 findId passinf = idRC (findRow $toFB passinf) (findCol$toLR passinf)
-solutionday5a = do
+solutionDay5a = do
     boardingpasses <- loadAndSplitLines "input5.txt"
     let rowscols = map splitRowsCols boardingpasses
     let ids = map findId rowscols
     let maxid = maximum ids
     print maxid
+
+
+-------------
+--Part 2
+-------------
+
+allIds = [0..8*128-1]
+
+missingWithExistingNeighbours idlist x = x `notElem` idlist && x+1 `elem` idlist && x-1 `elem` idlist
+
+solutionDay5b = do
+    boardingpasses <- loadAndSplitLines "input5.txt"
+    let rowscols = map splitRowsCols boardingpasses
+    let ids = map findId rowscols
+    let missing = filter (missingWithExistingNeighbours ids) allIds
+    print $ head missing
