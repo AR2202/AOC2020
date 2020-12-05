@@ -3,6 +3,7 @@
 module Day4
 (solutionDay4b,
 solutionDay4b_,
+solutionDay4bex,
 solutionDay4a,
 readPassportField,
 byrValid)
@@ -32,8 +33,8 @@ solutionDay4a = (splitOnBlankLine "input4.txt")  >>= print . length . filter toT
 
 data PassportField = BYR | IYR | EYR | HGT | HCL | ECL |PID |NONE deriving (Show,Read,Eq)
 
-passportFieldsWithData txt =   txt ^.. [regex|\b(byr|iyr|eyr|hgt|hcl|ecl|pid):#?\w*\b|] . match
-splitFieldnameFromData txt =  listToTuple $ fromMaybe [] (txt ^?  [regex|(\w+):(#?\w+\b)|] . groups)
+passportFieldsWithData txt =   txt ^.. [regex|\b(byr|iyr|eyr|hgt|hcl|ecl|pid):#?\w*($|\b)|] . match
+splitFieldnameFromData txt =  listToTuple $ fromMaybe [] (txt ^?  [regex|(\w+):(#?\w+)|] . groups)
 
 listToTuple :: [T.Text] -> (PassportField,T.Text)
 listToTuple []=(NONE,"")
@@ -54,6 +55,25 @@ solutionDay4b_ x = do
     print $ numValidFields first
     print $ length $ filter hasAllValidFields passportinfo
 
+
+solutionDay4bex:: Int -> IO()
+solutionDay4bex x = do
+    invalid <- splitOnBlankLine  "example4binvalid.txt"
+    valid <- splitOnBlankLine  "example4bvalid.txt"
+    let first = invalid !! x
+    
+    print first
+    
+    print $ fieldNames $ filter (uncurry dataIsValid) $ map splitFieldnameFromData $ passportFieldsWithData $ T.pack first
+    print $ filter (uncurry dataIsValid) $ map splitFieldnameFromData $ passportFieldsWithData $ T.pack first
+    print $ hasAllFieldnames first
+    print $ hasAllValidFields first
+    print $ numValidFields first
+    putStrLn "invalid:"
+    print $ length $ filter hasAllValidFields invalid
+    putStrLn "valid:"
+    print $ length $ filter hasAllValidFields valid
+
 readPassportField :: T.Text -> PassportField
 readPassportField = read . T.unpack
 
@@ -72,8 +92,8 @@ byrValid x = (read . T.unpack ) x `elem` [1920..2002]
 iyrValid x = (read . T.unpack ) x `elem` [2010..2020]
 eyrValid x = (read . T.unpack ) x `elem` [2020..2030]
 eclValid x = T.unpack  x `elem` ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"]
-pidValid x = has ([regex|(\d{9}\b)|]) x
-hclValid x = has ([regex|(#([0-9]|[a-f]){6}\b)|]) x
+pidValid x = has ([regex|(\d{9})$|]) x && length (T.unpack x) == 9
+hclValid x = has ([regex|(#([0-9]|[a-f]){6})|]) x
 hgtValid x = (read . T.unpack ) (height x) `elem` (validHeights $ hgtTokv x)
 
 hgtTokv x = x & [regex|(\d+)(in|cm)\b|] . match %@~ \[v, k] _ -> "{" <> k <> ":" <> v <> "}"
