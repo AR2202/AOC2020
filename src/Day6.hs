@@ -10,5 +10,5 @@ import Control.Monad
 
 
 solutionDay6a :: IO()
-solutionDay6a = splitOnBlankLine "input6.txt" >>= print . sum . fmap  (length . nub ) . fmap (join.lines)
+solutionDay6a = splitOnBlankLine "input6.txt" >>= print . sum . fmap  (length . nub  . join . lines)
     
