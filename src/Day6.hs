@@ -14,7 +14,7 @@ import Control.Monad
 ---------------------------
 
 solutionDay6a :: IO()
-solutionDay6a = splitOn "\n\n" <$> readFile "input/input6.txt" >>= print . sum . fmap  (length . nub  . join . lines)
+solutionDay6a = splitOnBlankLine "input6.txt" >>= print . sum . fmap  (length . nub  . join . lines)
 
 ------------------------------
 --Part2
