@@ -25,7 +25,5 @@ loadAndSplitLines filename = do
 readLines :: Read a => String -> IO [a]
 readLines filename = map read <$> loadAndSplitLines filename
 
-splitOnBlankLine filename = do
-    contents <- loadInput filename
-    let paragraphs = splitOn "\n\n" contents
-    return paragraphs
+
+splitOnBlankLine filename = splitOn "\n\n" <$> loadInput filename
