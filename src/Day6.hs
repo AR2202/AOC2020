@@ -13,7 +13,7 @@ import Control.Monad
 --Part 1
 ---------------------------
 
-solutionDay6a :: IO()
+solutionDay6a :: IO ()
 solutionDay6a = splitOnBlankLine "input6.txt" >>= print . sum . fmap  (length . nub  . join . lines)
 
 ------------------------------

@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 744b4069ba05d313ad485285a37b27ce39c6fb72246083c4a6e80215cbdf0ebb
+-- hash: 509788a8d93f76dc80c094981b693f2ddec47b75b827e5e814dd7baae5b986ce
 
 name:           aoc2020
 version:        0.1.0.0
@@ -39,10 +39,12 @@ library
   hs-source-dirs:
       src
   build-depends:
-      base >=4.7 && <5
+      QuickCheck
+    , base >=4.7 && <5
     , bytestring
     , cond
     , containers
+    , hspec
     , lens
     , lens-regex-pcre
     , pcre-heavy
@@ -62,11 +64,13 @@ executable aoc2020-exe
       app
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      aoc2020
+      QuickCheck
+    , aoc2020
     , base >=4.7 && <5
     , bytestring
     , cond
     , containers
+    , hspec
     , lens
     , lens-regex-pcre
     , pcre-heavy
@@ -87,11 +91,13 @@ test-suite aoc2020-test
       test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      aoc2020
+      QuickCheck
+    , aoc2020
     , base >=4.7 && <5
     , bytestring
     , cond
     , containers
+    , hspec
     , lens
     , lens-regex-pcre
     , pcre-heavy

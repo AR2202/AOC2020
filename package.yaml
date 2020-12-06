@@ -33,6 +33,8 @@ dependencies:
 - containers
 - raw-strings-qq
 - split
+- hspec
+- QuickCheck
 
 library:
   source-dirs: src

@@ -6,7 +6,9 @@ solutionDay4b_,
 solutionDay4bex,
 solutionDay4a,
 readPassportField,
-byrValid)
+howManyWithAllValidFields,
+numValidFields
+)
 where
 
 import Common
@@ -55,6 +57,7 @@ solutionDay4b_ x = do
     print $ numValidFields first
     print $ length $ filter hasAllValidFields passportinfo
 
+howManyWithAllValidFields = length . filter hasAllValidFields
 
 solutionDay4bex:: Int -> IO()
 solutionDay4bex x = do
@@ -94,7 +97,7 @@ eyrValid x = (read . T.unpack ) x `elem` [2020..2030]
 eclValid x = T.unpack  x `elem` ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"]
 pidValid x = has ([regex|(\d{9})$|]) x && length (T.unpack x) == 9
 hclValid x = has ([regex|(#([0-9]|[a-f]){6})|]) x
-hgtValid x = (read . T.unpack ) (height x) `elem` (validHeights $ hgtTokv x)
+hgtValid x = (read . T.unpack ) (height x) `elem` validHeights ( hgtTokv x)
 
 hgtTokv x = x & [regex|(\d+)(in|cm)\b|] . match %@~ \[v, k] _ -> "{" <> k <> ":" <> v <> "}"
 unitIsIn x = has ([regex|(in:)|]) x
@@ -114,6 +117,6 @@ hasAllFieldnames  = listHasAllFieldnames . listValidFields
 hasAllValidFields x = toTextAndCheckRequiredFields  x && allFieldsValid x && hasAllFieldnames x
 
 solutionDay4b :: IO()
-solutionDay4b = (splitOnBlankLine "input4.txt")  >>= print . length . filter hasAllValidFields
+solutionDay4b = splitOnBlankLine "input4.txt" >>= print . length . filter hasAllValidFields
 
 
