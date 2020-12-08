@@ -36,6 +36,7 @@ dependencies:
 - hspec
 - QuickCheck
 
+
 library:
   source-dirs: src
 
