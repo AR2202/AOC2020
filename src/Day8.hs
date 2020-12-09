@@ -16,6 +16,9 @@ import qualified Data.Text as T
 import Text.Read
 import qualified Data.List as L
 
+-------------------------------------
+--Types
+-------------------------------------
 
 data Instruction = NOP | ACC | JMP deriving (Show, Read, Eq)
 type InstructionLine = (Instruction, Int)
@@ -25,6 +28,7 @@ data ProgramState = ProgramState {currIndex :: Ind,
                      currAcc :: Int,
                      previouslyRun :: [Ind]} deriving (Show, Read, Eq)
 
+-- | run the program
 runInstructions :: Program -> ProgramState -> Either Int Int
 runInstructions prog progstate 
     |currIndex progstate `elem` previouslyRun progstate = Left $ currAcc progstate
@@ -45,7 +49,7 @@ runInstructions prog progstate
                                     (currAcc progstate)
                                     ((currIndex progstate) : (previouslyRun progstate))
 
-
+-- | initial State of program
 initialState :: ProgramState
 initialState = ProgramState 0 0 []
 
@@ -68,6 +72,10 @@ toInstructionLines lines = zip (instructions lines) (numbers lines)
 
 dropPlus z = if "+" `L.isPrefixOf` z then tail z else z
 
+-------------------------------------
+--Part 1
+-------------------------------------
+
 applyProgram :: String -> IO ()
 applyProgram input = do
     lines <-loadAndSplitLines input
@@ -82,7 +90,7 @@ example8 = applyProgram "example8.txt"
 solutionDay8a :: IO ()
 solutionDay8a = applyProgram "input8.txt"
 
----------------------------------------
+-------------------------------------
 --Part 2
 -------------------------------------
 
