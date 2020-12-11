@@ -35,6 +35,7 @@ dependencies:
 - split
 - hspec
 - QuickCheck
+- vector
 
 
 library:

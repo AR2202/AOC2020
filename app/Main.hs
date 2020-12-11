@@ -1,6 +1,6 @@
 module Main where
 
-
+import Day10
 
 main :: IO ()
-main = putStrLn "Not yet implemented"
+main = solutionDay10b
