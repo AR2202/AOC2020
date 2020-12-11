@@ -36,6 +36,7 @@ dependencies:
 - hspec
 - QuickCheck
 - vector
+- comonad
 
 
 library:
