@@ -1,10 +1,10 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.33.0.
+-- This file has been generated from package.yaml by hpack version 0.31.2.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 47cb97d1bffe1ef59eee5010df4f285663a69a19b2406cb9efe6e6c22a203420
+-- hash: 027cc0296012a2a20d45b9a0a6e3957076269bc122699afb3fb7ec9804a4c431
 
 name:           aoc2020
 version:        0.1.0.0
@@ -45,11 +45,13 @@ library
       src
   build-depends:
       QuickCheck
+    , adjunctions
     , base >=4.7 && <5
     , bytestring
     , comonad
     , cond
     , containers
+    , distributive
     , hspec
     , lens
     , lens-regex-pcre
@@ -72,12 +74,14 @@ executable aoc2020-exe
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       QuickCheck
+    , adjunctions
     , aoc2020
     , base >=4.7 && <5
     , bytestring
     , comonad
     , cond
     , containers
+    , distributive
     , hspec
     , lens
     , lens-regex-pcre
@@ -101,12 +105,14 @@ test-suite aoc2020-test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       QuickCheck
+    , adjunctions
     , aoc2020
     , base >=4.7 && <5
     , bytestring
     , comonad
     , cond
     , containers
+    , distributive
     , hspec
     , lens
     , lens-regex-pcre

@@ -37,6 +37,8 @@ dependencies:
 - QuickCheck
 - vector
 - comonad
+- adjunctions
+- distributive
 
 
 library:

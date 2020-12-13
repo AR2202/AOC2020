@@ -3,7 +3,8 @@ module Common
 (loadInput,
 loadAndSplitLines,
 splitOnBlankLine,
-readLines
+readLines,
+loadPadded
 
 )
 where
@@ -27,3 +28,13 @@ readLines filename = map read <$> loadAndSplitLines filename
 
 
 splitOnBlankLine filename = splitOn "\n\n" <$> loadInput filename
+
+loadPadded filename = do
+    contents <- loadInput filename
+    let linesOfFile = lines contents
+    let linesWPadding = map (\line -> '.':line ++ ".") linesOfFile
+
+    let len = length $ head linesOfFile
+    let paddingline = replicate len '.'
+    let paddingadded = paddingline : linesWPadding ++[paddingline]
+    return paddingadded
