@@ -4,7 +4,8 @@ module Common
 loadAndSplitLines,
 splitOnBlankLine,
 readLines,
-loadPadded
+loadPadded,
+readTuple
 
 )
 where
@@ -38,3 +39,6 @@ loadPadded filename = do
     let paddingline = replicate len '.'
     let paddingadded = paddingline : linesWPadding ++[paddingline]
     return paddingadded
+
+readTuple :: (Read a, Read b)=> (String,String) -> (a,b)
+readTuple (x,y) = (read x, read y)
