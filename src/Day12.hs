@@ -1,5 +1,6 @@
 module Day12 (
-    solutionDay12a
+    solutionDay12a,
+    solutionDay12b
 )
 where
 
@@ -14,9 +15,11 @@ type Coord = (Int,Int)
 type Position = (Coord, Orientation)
 data Direction = F | N | S | E | W | R | L deriving (Show, Read, Eq)
 type Instruction = (Direction, Int)
+type ShipWayPoint = (Coord,WayPoint)
+data WayPoint = WayPoint {north::Int, east::Int} deriving (Show, Read, Eq)
 
 -------------------------------------
---updating position
+--updating position Part 1
 -------------------------------------
 orientation2int :: Orientation -> Int
 orientation2int ON = 0
@@ -63,3 +66,25 @@ solutionDay12a = do
     let dist = pos2dist endpos
     print dist
     
+-----------------------------
+--Part 2
+-----------------------------
+
+move' :: Instruction -> ShipWayPoint -> ShipWayPoint
+move' (N,num) (s,WayPoint n e) = (s,WayPoint (n+num) e)
+move' (S,num) (s,WayPoint n e) = (s,WayPoint (n-num) e)
+move' (W,num) (s,WayPoint n e) = (s,WayPoint n (e-num))
+move' (E,num) (s,WayPoint n e) = (s,WayPoint n (e+num))
+move' (F,num) ((x,y),WayPoint n e)  = ((x+num*e,y-num*n),WayPoint n e)
+move' (R,num) swp = (iterate turn swp) !! (num `div` 90)
+    where turn (s,WayPoint n e) = (s,WayPoint (-1*e) n)
+move' (L,num) x = move' (R,360-num) x
+
+solutionDay12b = do
+    lines <- loadAndSplitLines "input12.txt"
+    let tuples = map (splitAt 1) lines
+    let instructionList = map readTuple tuples
+    let startpos = ((0,0),WayPoint 1 10)
+    let endpos = foldl' (flip move') startpos instructionList
+    let dist = pos2dist endpos
+    print dist
