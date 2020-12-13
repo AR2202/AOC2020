@@ -14,26 +14,19 @@ import Common
 import qualified Data.Vector as V
 import Data.Function (fix)
 
-data SeatState = Occupied | Empty | None deriving (Show, Eq, Read)
+--Types-------
 
+data SeatState = Occupied | Empty | None deriving (Show, Eq, Read)
 type Coord = (Int,Int)
 type Seat = (Coord,SeatState)
 type Seats = [Seat]
 type Seatsvec = [(Int,SeatState)]
 newtype Coordvec a = Coordvec (V.Vector a) deriving (Eq, Show, Read, Functor, Foldable)
-type Grid a = Store Coordvec a
 
 gridsizeEx = 10201
 lineSizeEx = 101
 
-coord2vecind (x,y) = y*lineSizeEx + x
-vecind2coord ind = (x,y)
-    where x = ind `mod` lineSizeEx
-          y = ind `div` lineSizeEx
 
-seat2vec (coord,state) = (coord2vecind coord,state)
-
-seats2seatsvec = map seat2vec
 
 instance Distributive Coordvec where
     distribute = distributeRep
@@ -50,7 +43,7 @@ instance Representable Coordvec where
 checkSeat :: Seatsvec -> Int -> SeatState
 checkSeat seats ind = fromMaybe None (lookup ind seats )
 
-mkStore :: Seatsvec ->  Grid SeatState
+mkStore :: Seatsvec ->  Store Coordvec SeatState
 mkStore seats = store checkFunction 0
     where checkFunction = checkSeat seats
     
@@ -58,20 +51,28 @@ mkStore seats = store checkFunction 0
     
     
 --logic of updating one seat-------------------------
-    
+
+coord2vecind (x,y) = y*lineSizeEx + x
+vecind2coord ind = (x,y)
+    where x = ind `mod` lineSizeEx
+          y = ind `div` lineSizeEx
+
+seat2vec (coord,state) = (coord2vecind coord,state)
+
+seats2seatsvec = map seat2vec    
       
 neighbours (x,y) = filter (/= (x,y)) [(x1,y1)| x1<-[x-1..x+1],y1<-[y-1..y+1]]
 
 neighboursInt ind =  fmap   coord2vecind $ neighbours $ vecind2coord ind
     
     
-checkNeighbours :: Grid SeatState -> [SeatState]
+checkNeighbours :: Store Coordvec SeatState -> [SeatState]
 checkNeighbours grid = experiment neighboursInt grid
     
 occupiedNeighbours :: Store Coordvec SeatState  -> Int
 occupiedNeighbours = length. (filter (== Occupied) ) . checkNeighbours
     
-neighboursToSeat :: Grid SeatState  -> SeatState
+neighboursToSeat :: Store Coordvec SeatState  -> SeatState
 neighboursToSeat store
     | (seatState == Empty)    && (occupiedNs == 0) = Occupied
     | (seatState == Occupied) && (occupiedNs >= 4) = Empty
@@ -92,7 +93,7 @@ step store = extend neighboursToSeat store
 -------loading input-------------------
 example11_1 = numOccupiedSeats "example11_1.txt"
 
---unfortunately can't be run on the input as too inefficient
+
 solutionDay11a = numOccupiedSeats "input11.txt"
 
 numOccupiedSeats filename = do
@@ -103,7 +104,6 @@ numOccupiedSeats filename = do
     let store = mkStore seatsAsVec 
     let coords = coordsFromSeats seatsAsVec
     let steadyState = equalsPrevious $  fmap (coordsToSeats coords) $ (steps store)
-
     let numOccupied = occupiedSeats steadyState
     print $ numOccupied
 
@@ -128,16 +128,8 @@ steps store = iterate step store
 equalsPrevious list 
     |head list == (head . tail) list = head list
     |otherwise               = equalsPrevious (tail list)
-------------unused-------------------
-equalsPrevious' list recFn n
-    |list !!n == list !!(n-1) = list!!n
-    |otherwise               = recFn (n+1)
 
-slowEqualsPrevious list = fix $ equalsPrevious' list
 
 occupiedSeats = length. filter   (== Occupied)
 
-eqprevFaster list x = fn (\n -> v V.! n)
-    where v = V.generate x $fn (\n -> v V.! n)
-          fn = equalsPrevious' list
 
