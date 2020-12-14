@@ -39,6 +39,8 @@ dependencies:
 - comonad
 - adjunctions
 - distributive
+- util
+- attoparsec
 
 
 library:

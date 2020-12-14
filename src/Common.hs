@@ -5,7 +5,8 @@ loadAndSplitLines,
 splitOnBlankLine,
 readLines,
 loadPadded,
-readTuple
+readTuple,
+splitOnEq
 
 )
 where
@@ -29,6 +30,8 @@ readLines filename = map read <$> loadAndSplitLines filename
 
 
 splitOnBlankLine filename = splitOn "\n\n" <$> loadInput filename
+
+splitOnEq filename = map (splitOn " = ") <$> loadAndSplitLines filename
 
 loadPadded filename = do
     contents <- loadInput filename
