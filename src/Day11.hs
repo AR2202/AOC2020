@@ -130,6 +130,6 @@ equalsPrevious list
     |otherwise               = equalsPrevious (tail list)
 
 
-occupiedSeats = length. filter   (== Occupied)
+occupiedSeats = length . filter   (== Occupied)
 
 

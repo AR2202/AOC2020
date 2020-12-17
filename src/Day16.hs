@@ -81,11 +81,14 @@ part2 filename = do
     let !range = linesToIntList $ lines $ head parts
     let !ranges = map lineToIntList $ lines $ head parts
     let !tickets = map readTickets $ drop 1 $ lines $ parts !! 2
+    let !yourticket = head $map readTickets $ drop 1 $ lines $ parts !! 1
     let !validTickets = filter (isValidTicket range) tickets
     let !validFields = map (\r-> filter (allInRange r validTickets) [0..length (head validTickets)-1]) ranges
     let !rowsFields = zip [1..] validFields
     let !fields = findFields rowsFields []
-    print fields
+    let !departurefields = map (head .snd) $filter (\x-> fst x `elem`[1..6]) fields
+    let !departureYourTicket = map (yourticket!!) departurefields
+    print $ product departureYourTicket
     
 
 example16b = part2 "example16.txt"    
