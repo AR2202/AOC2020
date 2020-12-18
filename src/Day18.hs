@@ -6,12 +6,16 @@ testsimpleE6,
 testsimpleE7,
 testsimpleE8,
 testsimpleE9,
+testsimpleE10,
+testsimpleE11,
 testevalE9,
 testevalE8,
 testevalE7,
 testevalsimpleE9,
+
 testsequence,
-solutionDay18a
+solutionDay18a,
+solutionDay18b
 )
 where
 
@@ -56,8 +60,6 @@ parensEN simpleExprImpl = do
 whitespace :: Parser ()
 whitespace = void $ many $ oneOf " \n\t"
 
-regularParse :: Parser a -> String -> Either ParseError a
-regularParse p = parse p ""
 
 parseWithEof :: Parser a -> String -> Either ParseError a
 parseWithEof p = parse (p <* eof) ""
@@ -94,16 +96,16 @@ multE = do
     e1 <- numE
     return $ Add e0 e1
 
-simpleExpr8 :: Parser SimpleExpr
-simpleExpr8 = chainl1  term8  (try multiplication <|> try division)
+simpleExprPart1 :: Parser SimpleExpr
+simpleExprPart1 = chainl1  term8  (try multiplication <|> try addition)
   where
-    division = do
+    addition = do
         void $ lexeme $ char '+'
         return Add
     multiplication = do
         void $ lexeme $ char '*'
         return Mult
-    term8 = term simpleExpr8
+    term8 = term simpleExprPart1
 
 
 
@@ -125,12 +127,12 @@ eval (Parens e)   = eval e
 ---------------------
 
 
-testsimpleE4 = parseWithWhitespace simpleExpr8 "1+2"
-testsimpleE5 = parseWithWhitespace simpleExpr8 "(1+2)"
-testsimpleE6 = parseWithWhitespace simpleExpr8 "1+ (2+3)"
-testsimpleE7 = parseWithWhitespace simpleExpr8 "1* (2+3)"
-testsimpleE8 = parseWithWhitespace simpleExpr8 "1+ 2*3"
-testsimpleE9 = parseWithWhitespace simpleExpr8 "1* 2+3"
+testsimpleE4 = parseWithWhitespace simpleExprPart1 "1+2"
+testsimpleE5 = parseWithWhitespace simpleExprPart1 "(1+2)"
+testsimpleE6 = parseWithWhitespace simpleExprPart1 "1+ (2+3)"
+testsimpleE7 = parseWithWhitespace simpleExprPart1 "1* (2+3)"
+testsimpleE8 = parseWithWhitespace simpleExprPart1 "1+ 2*3"
+testsimpleE9 = parseWithWhitespace simpleExprPart1 "1* 2+3"
 testevalE9 = eval (Add (Mult (Num 1) (Num 2)) (Num 3))
 testevalE7 = eval (Mult (Num 1) (Parens (Add (Num 2) (Num 3))))
 testevalE8 = eval (Mult (Add (Num 1) (Num 2)) (Num 3))
@@ -142,9 +144,36 @@ testsequence = sequence [testsimpleE8,testsimpleE9]
 --Part1
 ----------------
 
+solutionDay18a :: IO ()
 solutionDay18a = do
     lines <-loadAndSplitLines "input18.txt"
-    let mathsproblems = map (parseWithWhitespace simpleExpr8) lines
+    let mathsproblems = map (parseWithWhitespace simpleExprPart1) lines
+    let mathresults = map (fmap eval) mathsproblems
+    let sumResults = fmap sum $ sequence mathresults
+    print sumResults
+
+------------------
+--Part2
+----------------
+
+simpleExprPart2 :: Parser SimpleExpr
+simpleExprPart2 = chainl1  (chainl1 term8  addition) multiplication
+  where
+    addition = do
+        void $ lexeme $ char '+'
+        return Add
+    multiplication = do
+        void $ lexeme $ char '*'
+        return Mult
+    term8 = term simpleExprPart2
+
+testsimpleE10 = parseWithWhitespace simpleExprPart2 "1+ 2*3"
+testsimpleE11 = parseWithWhitespace simpleExprPart2 "1* 2+3"
+
+solutionDay18b :: IO ()
+solutionDay18b = do
+    lines <-loadAndSplitLines "input18.txt"
+    let mathsproblems = map (parseWithWhitespace simpleExprPart2) lines
     let mathresults = map (fmap eval) mathsproblems
     let sumResults = fmap sum $ sequence mathresults
     print sumResults
