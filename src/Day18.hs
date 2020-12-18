@@ -20,16 +20,14 @@ solutionDay18b
 where
 
 import Common
-import Text.Parsec (ParseError,parse,eof)
+import Text.Parsec (ParseError,parse,eof,try)
 import Text.Parsec.String (Parser)
-import Text.Parsec.Char (anyChar,oneOf, char, digit, satisfy)
 import Text.Parsec.Char
 import Data.Char
 import Text.Parsec.Combinator (many1, choice, chainl1)
-import Text.Parsec (try)
 import Control.Applicative ((<|>), many)
 import Control.Monad (void)
-import Data.Char (isLetter, isDigit)
+
 
 ----------------------------------------
 --Types
@@ -82,19 +80,6 @@ numE = do
     n <- lexeme $ many1 digit
     return $ Num $ read n
 
-addE :: Parser SimpleExpr
-addE = do
-    e0 <- numE
-    void $ lexeme $ char '+'
-    e1 <- numE
-    return $ Add e0 e1
-
-multE :: Parser SimpleExpr
-multE = do
-    e0 <- numE
-    void $ lexeme $ char '+'
-    e1 <- numE
-    return $ Add e0 e1
 
 simpleExprPart1 :: Parser SimpleExpr
 simpleExprPart1 = chainl1  term8  (try multiplication <|> try addition)
