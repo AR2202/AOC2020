@@ -41,6 +41,7 @@ dependencies:
 - distributive
 - util
 - attoparsec
+- parsec
 
 
 library:
