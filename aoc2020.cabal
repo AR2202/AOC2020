@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: e1045f51a96df28464d7fe816d9dc87041fe001e5f73709f5dfe438fd024f88d
+-- hash: ef07bb67a4a874fb9aa51323fa43aba58980b6a1ab11fd89623143a725487129
 
 name:           aoc2020
 version:        0.1.0.0
@@ -54,7 +54,8 @@ library
   hs-source-dirs:
       src
   build-depends:
-      QuickCheck
+      MissingH
+    , QuickCheck
     , adjunctions
     , attoparsec
     , base >=4.7 && <5
@@ -87,7 +88,8 @@ executable aoc2020-exe
       app
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      QuickCheck
+      MissingH
+    , QuickCheck
     , adjunctions
     , aoc2020
     , attoparsec
@@ -122,7 +124,8 @@ test-suite aoc2020-test
       test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      QuickCheck
+      MissingH
+    , QuickCheck
     , adjunctions
     , aoc2020
     , attoparsec

@@ -43,6 +43,7 @@ dependencies:
 - attoparsec
 - parsec
 - either-unwrap
+- MissingH
 
 
 library:

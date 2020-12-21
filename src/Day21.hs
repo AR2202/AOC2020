@@ -1,18 +1,27 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes #-}
+{-#LANGUAGE BangPatterns#-}
+
 module Day21 
 (example21a,
-solutionDay21a
+solutionDay21a,
+solutionDay21b,
+example21b
 
 )
 where
 
 import Common
 import Control.Lens
-import Data.List (nub,(\\),foldl1',intersect)
+import Data.List (nub,(\\),foldl1',intersect,sort)
+import Data.String.Utils (join)
 import Control.Lens.Regex.Text
 import Text.RawString.QQ
 import qualified Data.Text as T
+
+---------------
+--Part 1
+---------------
 
 matchAllergens :: String -> [T.Text]
 matchAllergens txt = concat $ T.pack txt ^.. [regex| (\w+)|] . groups
@@ -46,3 +55,33 @@ part1 filename = do
     let nonallergenic = length . filter (`notElem` allergenic) $ allIngredients 
     print nonallergenic
 
+-------------
+--Part 2
+-------------
+singles = filter (\x->(length ( snd x)) == 1) 
+
+intersectSecond list2 list1 = (fst list1, (snd list1) \\ list2)
+
+findAllergens :: [(T.Text,[String])]->[(T.Text,[String])] -> [(T.Text,[String])]
+findAllergens [] !identified = identified
+findAllergens !unidentified !identified = findAllergens  newunidentified (newidentified ++ identified)
+    where newidentified = singles unidentified
+          newunidentified = map (intersectSecond (nub ( concatMap snd newidentified))) $ unidentified \\ newidentified
+
+example21b :: IO ()
+example21b = part2 "example21.txt"
+
+solutionDay21b = part2 "input21.txt"
+
+part2 :: String -> IO ()
+part2 filename = do
+    lines <- loadAndSplitLines filename
+    let ingredients = map (words . takeWhile (/= '(')) lines
+    let allergens = map (matchAllergens  . dropWhile(/= '(')) lines
+    let allAllergens = nub$ concat allergens
+    let foods = zip ingredients allergens
+    let allergensIngredients = zip allAllergens $ map (ingredientsContaining foods) allAllergens
+    let identifiedAllergens = sort $ findAllergens allergensIngredients []
+    let dangerouslist = concatMap snd identifiedAllergens
+    let dangerousstring = join "," dangerouslist
+    putStrLn dangerousstring
