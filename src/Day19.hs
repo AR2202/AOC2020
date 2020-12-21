@@ -5,7 +5,15 @@ testRule3,
 testRule4,
 testRule5,
 testRule6,
-example19a
+testa,
+testb,
+testaorb,
+testaorb',
+testaandb,
+testaandb',
+testaandb'',
+example19a,
+solutionDay19a
 
 )
 where
@@ -13,14 +21,14 @@ import Common
 import Data.List as L
 import Data.IntMap.Strict as IM
 import Data.List.Split(splitOn)
-import Text.Parsec (ParseError,parse,eof,try)
+import Text.Parsec (ParseError,parse,eof,try,string)
 import Text.Parsec.String (Parser)
 import Text.Parsec.Char
 import Data.Char
 import Text.Parsec.Combinator (many1, choice, chainl1)
 import Control.Applicative ((<|>), many)
 import Control.Monad (void)
-import Data.Either.Unwrap(fromRight)
+import Data.Either.Unwrap(fromRight,isRight)
 import Data.Maybe(fromJust)
 
 
@@ -76,7 +84,19 @@ strE = lexeme $ do
     firstChar = satisfy (\a -> isLetter a || a == '_')
     nonFirstChar = satisfy (\a -> isDigit a || isLetter a || a == '_')
 
+parseA = string "a"
+parseB = string "b"
+--parseAthenB =  (++) <$> numE <*> strE
 
+parseAorB p1 p2= try p1 <|> try p2
+
+parseAthenB p1 p2 = do
+    s1 <- p1
+    s2 <- p2
+    return (s1++s2)
+
+parsechar :: String -> Parser String
+parsechar x = string x
 
 parseRule :: Parser Rule
 parseRule = chainl1 term8 (try orelse <|> try andthen)
@@ -122,6 +142,13 @@ testRule3 = parseWithWhitespace parseRule' "1 3 | 3 1"
 testRule4 = parseWithWhitespace parseRule' "1  | 3 "
 testRule5 = parseWithWhitespace parseRule' "1  | 3 1"
 testRule6 = parseWithWhitespace parseRule' "1 3 | 1"
+testa     = parseWithWhitespace parseA "a"
+testb     = parseWithWhitespace parseB "b"
+testaorb  = parseWithWhitespace (parseAorB parseA parseB) "a"
+testaorb' = parseWithWhitespace (parseAorB parseA parseB) "b"
+testaandb = parseWithWhitespace (parseAthenB parseA parseB) "ab"
+testaandb' = parseWithWhitespace (parseAthenB parseA parseB) "ba"
+testaandb'' = parseWithWhitespace (parseAthenB (parseAorB parseA parseB) parseB) "bb"
 
 parseSnd :: (a,String) -> (a,  Rule)
 parseSnd tuple = (fst tuple,fromRight $parseWithWhitespace parseRule' $snd tuple)
@@ -136,15 +163,27 @@ lookupRule intmap key = eval $fromJust $ IM.lookup key intmap
           eval  (AndThen x y) = AndThen (eval x) (eval y)
           eval  (Str s) = Str s
 
+rule2parser (Str x) = parsechar x
+rule2parser (AndThen x y) = parseAthenB (rule2parser x) (rule2parser y)
+rule2parser (OrElse x y) = parseAorB (rule2parser x) (rule2parser y)
 
-example19a :: IO()
-example19a = do
-    input <- splitOnBlankLine "example19.txt"
+example19a :: IO ()
+example19a = part1 "example19.txt"
+
+solutionDay19a :: IO ()
+solutionDay19a = part1 "input19.txt"
+
+part1 :: String -> IO ()
+part1 filename = do
+    input <- splitOnBlankLine filename
     let ruleinput = L.map  (splitOn ":" ) $ lines $ head input
     let rules = L.map toTupleFirstToInt ruleinput
     let parsed = L.map parseSnd rules
     let messages = lines $ last input
     let rulemap = L.foldl' (flip (uncurry IM.insert)) empty parsed
     let evaluatedRules = lookupRule rulemap 0
-    print evaluatedRules
-    print messages
+    let parserFromRule = rule2parser evaluatedRules
+    let parsedMessages = L.map (parseWithWhitespace parserFromRule) messages
+    let result = (length . L.filter isRight) parsedMessages
+    print result
+    
