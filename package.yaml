@@ -42,6 +42,7 @@ dependencies:
 - util
 - attoparsec
 - parsec
+- either-unwrap
 
 
 library:

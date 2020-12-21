@@ -1,10 +1,10 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.33.0.
+-- This file has been generated from package.yaml by hpack version 0.31.2.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: a4431c6f698e2f7e5dc8db45f7711b8690fe3501272a3a84edd20079ab5f0e9a
+-- hash: 71186b04102993d03534d2470b2ac5d009c21e1a63f07348d99a9464213e7802
 
 name:           aoc2020
 version:        0.1.0.0
@@ -38,7 +38,9 @@ library
       Day16
       Day17
       Day18
+      Day19
       Day2
+      Day20
       Day3
       Day4
       Day5
@@ -60,6 +62,7 @@ library
     , cond
     , containers
     , distributive
+    , either-unwrap
     , hspec
     , lens
     , lens-regex-pcre
@@ -93,6 +96,7 @@ executable aoc2020-exe
     , cond
     , containers
     , distributive
+    , either-unwrap
     , hspec
     , lens
     , lens-regex-pcre
@@ -127,6 +131,7 @@ test-suite aoc2020-test
     , cond
     , containers
     , distributive
+    , either-unwrap
     , hspec
     , lens
     , lens-regex-pcre
