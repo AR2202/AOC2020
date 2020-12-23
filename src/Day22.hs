@@ -42,16 +42,19 @@ recursiveCombat p1 p2 prev1 prev2
     
     |head p1 > head p2 = recursiveCombat (tail p1 ++ [head p1, head p2]) (tail p2) (p1:prev1)(p2:prev2)
     |otherwise         = recursiveCombat (tail p1) (tail p2 ++ [head p2, head p1]) (p1:prev1) (p2:prev2)
-        where sub1 = take (head p1) (tail p1)
-              sub2 = take (head p2)(tail p2)
+        where sub1 = take (head p1) $ tail p1
+              sub2 = take (head p2)$ tail p2
             
             
 subgame [] list _ _ = False
 subgame list [] _ _ = True
 subgame p3 p4 prev1 prev2
     |(p3,p4) `elem` (zip prev1 prev2) = True
+    |head p3 < length p3 && head p4 < length p4 = if subgame sub1 sub2 [] [] then subgame (tail p3 ++ [head p3, head p4]) (tail p4) (p3:prev1) (p4:prev2) else subgame (tail p3) (tail p4 ++ [head p4, head p3])(p3:prev1)(p4:prev2)
     |head p3 > head p4 = subgame (tail p3 ++ [head p3, head p4]) (tail p4) (p3:prev1) (p4:prev2)
     |otherwise         = subgame (tail p3) (tail p4 ++ [head p4, head p3]) (p3:prev1) (p4:prev2)
+        where sub1 = take (head p3) $ tail p3
+              sub2 = take (head p4)$ tail p4
 
 example22b :: IO ()
 example22b = part2 "example22.txt"
