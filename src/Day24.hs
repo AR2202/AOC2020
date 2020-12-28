@@ -1,9 +1,11 @@
+{-#LANGUAGE BangPatterns#-}
+
 module Day24
-(move,
-Direction(..),
-test24,
+(
 example24a,
-solutionDay24a
+solutionDay24a,
+example24b,
+solutionDay24b
 
 )
 where
@@ -27,6 +29,7 @@ data Direction = E | SE | SW | W | NW | NE deriving (Show, Read, Eq)
 
 type Coord = (Int,Int)
 
+data Color = Black | White deriving (Show, Read, Eq)
 ------------------------
 --Identifying tiles
 ------------------------
@@ -127,4 +130,40 @@ part1 filename = do
     let blacktiles = blackTiles tiles
     print $ length blacktiles
 
+--------------
+-- Part 2
+--------------
 
+adjacent tile = map (move tile) [W, E, NE, NW, SE, SW]
+
+newcolor tile blacklist 
+    |tile `elem` blacklist && blackAdjacent == 2    = Black
+    |tile `elem` blacklist && blackAdjacent == 1    = Black
+    |tile `notElem` blacklist && blackAdjacent == 2 = Black
+    |otherwise                                      = White
+        where !blackAdjacent = length $ filter (`elem` blacklist) $ adjacent tile
+
+blackAndAdjacent blacklist = nub $ blacklist ++ neighbours
+    where !neighbours = concatMap adjacent blacklist
+
+newBlacks !blacklist = filter (\tile -> newcolor tile blacklist == Black) $ blackAndAdjacent blacklist
+
+blackNDays n !blacklist = iterate newBlacks blacklist !! n
+
+
+part2 :: String -> IO ()
+part2 filename = do
+    directions <- loadAndSplitLines filename
+    let !tiles = map stringToTile directions
+    let !blacktiles = blackTiles tiles
+    let !black100days = blackNDays 100 <$> sequence blacktiles
+    print  $ length <$> black100days
+
+example24b :: IO ()
+example24b = part2 "example24.txt"
+--------------
+--Part 1
+--------------
+
+solutionDay24b :: IO ()
+solutionDay24b = part2 "input24.txt"
