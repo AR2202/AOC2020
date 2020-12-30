@@ -32,8 +32,8 @@ newlist list = takeWhile (/= destination list) (tail list') ++ [destination list
 
 answer list = drop 1 $dropWhile(/=1) list++ takeWhile (/=1)list
 
-example23a = answer $ (iterate newlist $ toDigitList example23) !! 10
+example23a = answer $ iterate newlist  (toDigitList example23) !! 10
 
-example23a100moves = answer $ (iterate newlist $ toDigitList example23) !! 100
+example23a100moves = answer $ iterate newlist  (toDigitList example23) !! 100
 
-solutionDay23a = putStrLn $ concatMap show $ answer $ (iterate newlist $ toDigitList input23) !! 100
+solutionDay23a = putStrLn $ concatMap show $ answer $ iterate newlist  (toDigitList input23) !! 100
