@@ -35,7 +35,6 @@ showDigit2Char 1 = '1'
 applyMask =  zipWith overwrite
 
 
-
 masked mask string = string2decimal $ Prelude.map fromJust $ applyMask mask string
 
 readWithMask mask string = masked mask $ i36tobinary $ read string
@@ -48,7 +47,6 @@ memAddress2key :: String -> Int
 memAddress2key string = read $ T.unpack $ head $toListOf([regex|(\d+)|] . Control.Lens.Regex.Text.group 0) $ T.pack string
 
 string2decimal "" = 0
-
 string2decimal string = (readChar2digit . head) string *2^(length string - 1) + string2decimal (tail string)
 
 i36tobinary i = decimal2binary i 35
@@ -56,9 +54,6 @@ i36tobinary i = decimal2binary i 35
         decimal2binary _ (-1) = ""
         decimal2binary i n = show (i `div` (2^n)) ++ decimal2binary (i `mod` (2^n))(n-1)
 
-
-
-test = i36tobinary 11
 
 solutionDay14a :: IO ()
 solutionDay14a = do
