@@ -1,5 +1,9 @@
 module Day13 
-(solution13a
+(solution13a,
+
+test13b',
+test13b'',
+solution13b
 
 )
 where
@@ -29,4 +33,35 @@ result13 linesInput = multiplied ((read . head ) linesInput) (toNumbers $  lines
 solution13a = do
     lines <- loadAndSplitLines "input13.txt"
     let result = result13 lines
+    
+    print result
+
+
+
+----------
+--Part2
+----------
+
+test13b' =earliest [ (17,0), (13,2) ,(19,3)]
+test13b''= earliest [(67,0),(7,1),(59,2),(61,3)]
+
+remainder :: Integer -> (Integer, Integer) -> Bool
+remainder x (i,rem) = (x + rem) `mod` i == 0
+
+earliest list = head [x|x<-[0..], all (remainder x) list]
+
+toPairs list = zip ( splitOn ","  list) [0..]
+
+pairToNumbers :: [(String,a)] -> [(Integer,a)] 
+pairToNumbers pair = map fromJust $ filter isJust $ map readMaybePair pair
+    where readMaybePair (a,b) = case readMaybe a of 
+            Nothing -> Nothing
+            Just x -> Just (x,b)
+
+-- | This function is too inefficient on the input            
+solution13b :: IO ()
+solution13b = do
+    lines <-loadAndSplitLines "input13.txt"
+    let input = pairToNumbers $ toPairs $ lines !! 1 
+    let result = earliest input
     print result
