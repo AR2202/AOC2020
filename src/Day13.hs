@@ -1,8 +1,5 @@
 module Day13 
 (solution13a,
-
-test13b',
-test13b'',
 solution13b
 
 )
@@ -14,6 +11,7 @@ import Data.Ord
 import Data.List.Split
 import Text.Read
 import Data.Maybe
+import Math.NumberTheory.Moduli.Chinese
 
 
 toNumbers :: String -> [Int]
@@ -42,8 +40,20 @@ solution13a = do
 --Part2
 ----------
 
-test13b' =earliest [ (17,0), (13,2) ,(19,3)]
-test13b''= earliest [(67,0),(7,1),(59,2),(61,3)]
+-- | Testing on the exmaples
+test13b' = earliest [ (17,0), (13,2) ,(19,3)]
+
+test13b'' = earliest [(67,0),(7,1),(59,2),(61,3)]
+
+testlcm   = lcmpair [ (17,0), (13,2) ,(19,3)]
+
+testallNi = allNi [ (17,0), (13,2) ,(19,3)]
+
+lcmpair = product . map fst
+
+lcmpair' = product . map snd
+
+allNi list = map (\x ->  lcmpair list `div` fst x ) list
 
 remainder :: Integer -> (Integer, Integer) -> Bool
 remainder x (i,rem) = (x + rem) `mod` i == 0
@@ -58,10 +68,28 @@ pairToNumbers pair = map fromJust $ filter isJust $ map readMaybePair pair
             Nothing -> Nothing
             Just x -> Just (x,b)
 
--- | This function is too inefficient on the input            
-solution13b :: IO ()
-solution13b = do
+
+
+pairToNumbers' :: [(String, a)] -> [(a,Integer)] 
+pairToNumbers' pair = map fromJust $ filter isJust $ map readMaybePair pair
+    where readMaybePair (a,b) = case readMaybe a of 
+            Nothing -> Nothing
+            Just x -> Just (b,x)
+
+-- | This function is too inefficient on the input - don't use           
+solution13b' :: IO ()
+solution13b' = do
     lines <-loadAndSplitLines "input13.txt"
     let input = pairToNumbers $ toPairs $ lines !! 1 
     let result = earliest input
+    print result
+
+-- | This is much more efficient using a number theory library
+solution13b :: IO ()
+solution13b = do
+    lines <-loadAndSplitLines "input13.txt"
+    let input = pairToNumbers' $ toPairs $ lines !! 1 
+    let lcm' = lcmpair' input
+    let rem = chineseRemainder input
+    let result = fmap (lcm' - ) rem
     print result

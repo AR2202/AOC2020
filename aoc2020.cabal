@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: e8e1d2e59e71f7e26ccfec5fb2f573336c8c779409793213fefe8cb218eb6304
+-- hash: ffdcfdace8787aa7df3919e83c5538e958cb31384beda2b443fac56aae6e6e25
 
 name:           aoc2020
 version:        0.1.0.0
@@ -61,6 +61,7 @@ library
       MissingH
     , QuickCheck
     , adjunctions
+    , arithmoi
     , attoparsec
     , base >=4.7 && <5
     , bytestring
@@ -70,6 +71,7 @@ library
     , distributive
     , either-unwrap
     , hspec
+    , implicit-hie
     , lens
     , lens-regex-pcre
     , parsec
@@ -96,6 +98,7 @@ executable aoc2020-exe
     , QuickCheck
     , adjunctions
     , aoc2020
+    , arithmoi
     , attoparsec
     , base >=4.7 && <5
     , bytestring
@@ -105,6 +108,7 @@ executable aoc2020-exe
     , distributive
     , either-unwrap
     , hspec
+    , implicit-hie
     , lens
     , lens-regex-pcre
     , parsec
@@ -132,6 +136,7 @@ test-suite aoc2020-test
     , QuickCheck
     , adjunctions
     , aoc2020
+    , arithmoi
     , attoparsec
     , base >=4.7 && <5
     , bytestring
@@ -141,6 +146,7 @@ test-suite aoc2020-test
     , distributive
     , either-unwrap
     , hspec
+    , implicit-hie
     , lens
     , lens-regex-pcre
     , parsec

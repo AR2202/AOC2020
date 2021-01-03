@@ -36,6 +36,8 @@ packages:
 #
 extra-deps:
 - lens-regex-pcre-1.1.0.0@sha256:a6053fefae59f6b53b4741e5a75c5fae350af80dbf62e8673b565e1c3f34f8b9,2209
+
+- implicit-hie-0.1.2.5@sha256:517a98ef72f92f0a1617495222774fed3a751a64b0c06fbfc7b858d7aa5de279,2998
 # - acme-missiles-0.3
 # - git: https://github.com/commercialhaskell/stack.git
 #   commit: e7b331f14bcffb8367cd58fbfc8b40ec7642100a

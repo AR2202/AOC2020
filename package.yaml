@@ -44,6 +44,8 @@ dependencies:
 - parsec
 - either-unwrap
 - MissingH
+- implicit-hie
+- arithmoi
 
 
 library:
